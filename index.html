@@ -3,7 +3,21 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EFIM365 — внедрение ELMA365</title>
+    <title>EFIM365 — внедрение ELMA365 без бюрократии</title>
+
+    <!-- SEO -->
+    <meta name="description" content="EFIM365 — сертифицированный партнёр ELMA365. Внедряем низкокодовую автоматизацию без бюрократии: CRM, документооборот, порталы, интеграции. Более 6 лет опыта, 20+ проектов." />
+    <meta name="keywords" content="ELMA365, внедрение ELMA365, low-code, автоматизация бизнеса, CRM, документооборот, EFIM365, Загребин, партнёр ELMA365" />
+
+    <!-- Open Graph (для красивых карточек в мессенджерах) -->
+    <meta property="og:title" content="EFIM365 — внедрение ELMA365" />
+    <meta property="og:description" content="Сложные задачи — простые решения. Внедряем ELMA365 без бюрократии." />
+    <meta property="og:image" content="Лого.jpg" />
+    <meta property="og:type" content="website" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="Лого.jpg" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
@@ -390,9 +404,9 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* ----- КЕЙС ПАРТНЁРА ----- */
+        /* ----- КЕЙС ПАРТНЁРА (подзаголовок убран, блок поднят) ----- */
         .case {
-            padding: 80px 0;
+            padding: 60px 0 80px;
             background: #fafcff;
         }
 
@@ -407,6 +421,7 @@
             gap: 40px;
             align-items: center;
             transition: 0.25s;
+            margin-top: 8px;
         }
 
         .case-card:hover {
@@ -618,7 +633,7 @@
             border-bottom: none;
         }
 
-        /* ----- КОНТАКТЫ ----- */
+        /* ----- КОНТАКТЫ (нативная форма как раньше) ----- */
         .contact {
             padding: 80px 0 90px;
             background: #0b2c47;
@@ -680,21 +695,52 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
-        /* ----- ФОРМА (Яндекс Формы через iframe) ----- */
-        .contact-form-wrapper {
-            background: white;
-            border-radius: 16px;
-            padding: 0;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            min-height: 480px;
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        .contact-form-wrapper iframe {
-            width: 100% !important;
-            height: 480px;
+        .contact-form input,
+        .contact-form textarea {
+            padding: 14px 18px;
+            border-radius: 12px;
             border: none;
-            display: block;
+            font-size: 0.95rem;
+            font-family: inherit;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            outline: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.2s;
+        }
+
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline-color: #b87333;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .contact-form .btn-primary {
+            background: #b87333;
+            color: white;
+            align-self: flex-start;
+            padding: 14px 44px;
+            font-size: 1rem;
+            border: none;
+        }
+
+        .contact-form .btn-primary:hover {
+            background: #c98644;
         }
 
         /* ----- ФУТЕР ----- */
@@ -790,6 +836,10 @@
             .hero {
                 padding: 40px 0 60px;
             }
+            .contact-form .btn-primary {
+                align-self: stretch;
+                text-align: center;
+            }
             .logo img {
                 height: 50px;
             }
@@ -828,6 +878,12 @@
                 width: 110px;
                 height: 90px;
             }
+        }
+
+        .comma {
+            font-size: 1.2rem;
+            opacity: 1;
+            margin-left: -0.05em;
         }
     </style>
 </head>
@@ -945,7 +1001,6 @@
             <p class="section-sub">которые доверили нам свою автоматизацию</p>
             <div class="clients-wrapper">
                 <div class="clients-track">
-                    <!-- Первый набор -->
                     <div class="client-item bg-f6"><img src="f6.png" alt="F6" /></div>
                     <div class="client-item white-bg"><img src="МИТТУ.jpeg" alt="КАМАЗ (МИТТУ)" /></div>
                     <div class="client-item white-bg"><img src="Камаз.jpg" alt="КАМАЗ" /></div>
@@ -956,7 +1011,6 @@
                     <div class="client-item bg-rogos"><img src="Рогос.jpg" alt="Рогос" /></div>
                     <div class="client-item white-bg"><img src="Красцветмет.jpg" alt="КрасЦветмед" /></div>
                     <div class="client-item white-bg"><img src="РМК.png" alt="РМК" /></div>
-                    <!-- Дублируем для бесконечности -->
                     <div class="client-item bg-f6"><img src="f6.png" alt="F6" /></div>
                     <div class="client-item white-bg"><img src="МИТТУ.jpeg" alt="КАМАЗ (МИТТУ)" /></div>
                     <div class="client-item white-bg"><img src="Камаз.jpg" alt="КАМАЗ" /></div>
@@ -972,11 +1026,10 @@
         </div>
     </section>
 
-    <!-- ===== КЕЙС ПАРТНЁРА ===== -->
+    <!-- ===== КЕЙС ПАРТНЁРА (подзаголовок убран, блок поднят) ===== -->
     <section class="case" id="case">
         <div class="container">
             <h2 class="section-title">Кейс партнёра</h2>
-            <p class="section-sub">Как мы помогли F6 запустить собственную экосистему коммуникаций на ELMA365</p>
             <div class="case-card">
                 <div class="case-logo">
                     <img src="f6.png" alt="F6" />
@@ -1055,7 +1108,6 @@
                     <strong>Мой подход:</strong> без бюрократии, зато с глубокой экспертизой и личной ответственностью за проект.
                 </p>
 
-                <!-- Раскрывающийся блок: Опыт работы -->
                 <details class="details-block">
                     <summary>💻 Опыт работы</summary>
                     <table class="experience-table">
@@ -1067,31 +1119,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>с ноября 2024</td>
-                                <td>EFIM365</td>
-                                <td>Самозанятость</td>
-                            </tr>
-                            <tr>
-                                <td>февраль 2024 — ноябрь 2024</td>
-                                <td>МТС Digital</td>
-                                <td>Team Lead (ELMA365)</td>
-                            </tr>
-                            <tr>
-                                <td>июнь 2023 — февраль 2024</td>
-                                <td>Codexoptimus</td>
-                                <td>Senior low-code developer (ELMA365)</td>
-                            </tr>
-                            <tr>
-                                <td>январь 2021 — июнь 2023</td>
-                                <td>Elma</td>
-                                <td>Team Lead (ELMA365)</td>
-                            </tr>
-                            <tr>
-                                <td>декабрь 2019 — январь 2021</td>
-                                <td>Elma</td>
-                                <td>Low-code developer (ELMA365)</td>
-                            </tr>
+                            <tr><td>с ноября 2024</td><td>EFIM365</td><td>Самозанятость</td></tr>
+                            <tr><td>февраль 2024 — ноябрь 2024</td><td>МТС Digital</td><td>Team Lead (ELMA365)</td></tr>
+                            <tr><td>июнь 2023 — февраль 2024</td><td>Codexoptimus</td><td>Senior low-code developer (ELMA365)</td></tr>
+                            <tr><td>январь 2021 — июнь 2023</td><td>Elma</td><td>Team Lead (ELMA365)</td></tr>
+                            <tr><td>декабрь 2019 — январь 2021</td><td>Elma</td><td>Low-code developer (ELMA365)</td></tr>
                         </tbody>
                     </table>
                 </details>
@@ -1099,10 +1131,10 @@
         </div>
     </section>
 
-    <!-- ===== КОНТАКТЫ (форма Яндекс Формы) ===== -->
+    <!-- ===== КОНТАКТЫ (нативная форма) ===== -->
     <section class="contact" id="contact">
         <div class="container">
-            <h2 class="section-title">Хотите обсудить проект?</h2>
+            <h2 class="section-title">Давайте обсудим ваш проект</h2>
             <p class="section-sub">Напишите — мы всегда на связи. Отвечаем быстро и по делу.</p>
             <div class="contact-grid">
                 <div class="contact-info">
@@ -1116,14 +1148,22 @@
                         <a href="https://vk.com/efzagrebin" target="_blank">🐦 VK</a>
                     </div>
                     <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.6;">
-                        Также веду YouTube-канал с обучающими стримами.
+                        Также веду <a href="https://www.youtube.com/@efim365" target="_blank" style="color: rgba(255,255,255,0.8); text-decoration: underline;">YouTube</a>-канал с обучающими стримами.
                     </p>
                 </div>
 
-                <!-- Форма Яндекс Формы -->
-                <div class="contact-form-wrapper">
-                    <iframe src="https://forms.yandex.ru/u/6aab84b402848f5681704097?iframe=1" frameborder="0" name="ya-form-6aab84b402848f5681704097"></iframe>
-                </div>
+                <!-- 
+                    НАТИВНАЯ ФОРМА
+                    ⚠️ Для работы подключите Web3Forms или ApiMonster:
+                    - Web3Forms: замените ВАШ_КЛЮЧ_ДОСТУПА на ключ с web3forms.com
+                    - Или используйте свой PHP-скрипт, если хостинг поддерживает PHP
+                -->
+                <form class="contact-form" action="#" method="POST">
+                    <input type="text" name="name" placeholder="Ваше имя" required />
+                    <input type="email" name="email" placeholder="Email для связи" required />
+                    <textarea name="message" placeholder="Опишите задачу или проект..." rows="4"></textarea>
+                    <button type="submit" class="btn-primary">Отправить заявку</button>
+                </form>
             </div>
         </div>
     </section>
@@ -1135,18 +1175,6 @@
             <a href="#">Политика конфиденциальности</a>
         </div>
     </footer>
-
-    <!-- Скрипт Яндекс Форм (для корректной работы iframe) -->
-    <script src="https://forms.yandex.ru/_static/embed.js"></script>
-
-    <!-- Стили для увеличенной запятой -->
-    <style>
-        .comma {
-            font-size: 1.2rem;
-            opacity: 1;
-            margin-left: -0.05em;
-        }
-    </style>
 
     <script>
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
