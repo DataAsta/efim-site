@@ -7,9 +7,9 @@
 
     <!-- SEO -->
     <meta name="description" content="EFIM365 — сертифицированный партнёр ELMA365. Внедряем низкокодовую автоматизацию без бюрократии: CRM, документооборот, порталы, интеграции. Более 6 лет опыта, 20+ проектов." />
-    <meta name="keywords" content="ELMA365, ELMA, внедрение ELMA365, low-code, BPM, автоматизация бизнеса, CRM, документооборот, EFIM365, Загребин, партнёр ELMA365" />
+    <meta name="keywords" content="ELMA365, внедрение ELMA365, low-code, автоматизация бизнеса, CRM, документооборот, EFIM365, Загребин, партнёр ELMA365" />
 
-    <!-- Open Graph (для красивых карточек в мессенджерах) -->
+    <!-- Open Graph -->
     <meta property="og:title" content="EFIM365 — внедрение ELMA365" />
     <meta property="og:description" content="Сложные задачи — простые решения. Внедряем ELMA365 без бюрократии." />
     <meta property="og:image" content="Лого.jpg" />
@@ -212,12 +212,29 @@
             flex-wrap: wrap;
         }
 
-        .hero-image img {
+        /* ====== СЛАЙД-ШОУ В ГЛАВНОМ ЭКРАНЕ ====== */
+        .hero-image {
+            position: relative;
             width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 30px 60px rgba(11, 44, 71, 0.12);
             aspect-ratio: 4/3;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(11, 44, 71, 0.12);
+        }
+
+        .hero-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .hero-image img.active {
+            opacity: 1;
         }
 
         /* ----- ЦИФРЫ ----- */
@@ -404,7 +421,7 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* ----- КЕЙС ПАРТНЁРА (подзаголовок убран, блок поднят) ----- */
+        /* ----- КЕЙС ПАРТНЁРА ----- */
         .case {
             padding: 60px 0 80px;
             background: #fafcff;
@@ -580,7 +597,6 @@
             color: #b87333;
         }
 
-        /* стили для раскрывающегося блока с опытом */
         .details-block {
             margin-top: 12px;
             border: 1px solid #eef2f6;
@@ -633,7 +649,7 @@
             border-bottom: none;
         }
 
-        /* ----- КОНТАКТЫ (нативная форма как раньше) ----- */
+        /* ----- КОНТАКТЫ ----- */
         .contact {
             padding: 80px 0 90px;
             background: #0b2c47;
@@ -910,7 +926,7 @@
         </div>
     </header>
 
-    <!-- ===== ГЛАВНЫЙ ЭКРАН ===== -->
+    <!-- ===== ГЛАВНЫЙ ЭКРАН (с плавным слайд-шоу) ===== -->
     <section class="hero">
         <div class="container hero-grid">
             <div class="hero-content">
@@ -919,7 +935,7 @@
                 </a>
                 <h1>Сложные задачи — <br /><span>простые решения</span></h1>
                 <p class="subtitle">
-                    Внедряем ELMA365 без бюрократии. <br />
+                    Внедряем ELMA365 без бюрократии.<br />
                     Более 6 лет экспертизы, 20+ реализованных проектов.<br />
                     Работаем на результат.
                 </p>
@@ -929,7 +945,8 @@
                 </div>
             </div>
             <div class="hero-image">
-                <img src="Шапка.png" alt="Горы — символ преодоления" loading="lazy" />
+                <img id="heroImg1" src="Шапка.png" alt="EFIM365" class="active" />
+                <img id="heroImg2" src="Горы.jpg" alt="Горы" />
             </div>
         </div>
     </section>
@@ -1027,7 +1044,7 @@
         </div>
     </section>
 
-    <!-- ===== КЕЙС ПАРТНЁРА (подзаголовок убран, блок поднят) ===== -->
+    <!-- ===== КЕЙС ПАРТНЁРА ===== -->
     <section class="case" id="case">
         <div class="container">
             <h2 class="section-title">Кейс партнёра</h2>
@@ -1132,7 +1149,7 @@
         </div>
     </section>
 
-    <!-- ===== КОНТАКТЫ (нативная форма) ===== -->
+    <!-- ===== КОНТАКТЫ ===== -->
     <section class="contact" id="contact">
         <div class="container">
             <h2 class="section-title">Давайте обсудим ваш проект</h2>
@@ -1153,13 +1170,7 @@
                     </p>
                 </div>
 
-                <!-- 
-                    НАТИВНАЯ ФОРМА
-                    ⚠️ Для работы подключите Web3Forms или ApiMonster:
-                    - Web3Forms: замените ВАШ_КЛЮЧ_ДОСТУПА на ключ с web3forms.com
-                    - Или используйте свой PHP-скрипт, если хостинг поддерживает PHP
-                -->
-                <form class="contact-form" action="#" method="POST">
+                <form class="contact-form" id="contactForm" action="#" method="POST">
                     <input type="text" name="name" placeholder="Ваше имя" required />
                     <input type="email" name="email" placeholder="Email для связи" required />
                     <textarea name="message" placeholder="Опишите задачу или проект..." rows="4"></textarea>
@@ -1178,6 +1189,7 @@
     </footer>
 
     <script>
+        // Плавный скролл по якорям
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
@@ -1189,6 +1201,22 @@
                 }
             });
         });
+
+        // ===== Плавное слайд-шоу в главном экране =====
+        const img1 = document.getElementById('heroImg1');
+        const img2 = document.getElementById('heroImg2');
+        let showingFirst = true;
+
+        setInterval(function() {
+            if (showingFirst) {
+                img1.classList.remove('active');
+                img2.classList.add('active');
+            } else {
+                img2.classList.remove('active');
+                img1.classList.add('active');
+            }
+            showingFirst = !showingFirst;
+        }, 2000);
     </script>
 
 </body>
