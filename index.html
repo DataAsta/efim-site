@@ -217,7 +217,7 @@
             flex-wrap: wrap;
         }
 
-        /* ====== СЛАЙД-ШОУ В ГЛАВНОМ ЭКРАНЕ ====== */
+        /* ====== СЛАЙД-ШОУ ====== */
         .hero-image {
             position: relative;
             width: 100%;
@@ -931,7 +931,7 @@
         </div>
     </header>
 
-    <!-- ===== ГЛАВНЫЙ ЭКРАН (слайд-шоу с задержкой 3 сек) ===== -->
+    <!-- ===== ГЛАВНЫЙ ЭКРАН (слайд-шоу 3 сек) ===== -->
     <section class="hero">
         <div class="container hero-grid">
             <div class="hero-content">
@@ -1154,7 +1154,7 @@
         </div>
     </section>
 
-    <!-- ===== КОНТАКТЫ (обновлённая форма) ===== -->
+    <!-- ===== КОНТАКТЫ ===== -->
     <section class="contact" id="contact">
         <div class="container">
             <h2 class="section-title">Давайте обсудим ваш проект</h2>
@@ -1175,7 +1175,6 @@
                     </p>
                 </div>
 
-                <!-- ===== ОБНОВЛЁННАЯ ФОРМА ===== -->
                 <form class="contact-form" id="contactForm">
                     <input type="text" name="client_name_site" placeholder="Ваше имя и фамилия" required />
                     <input type="text" name="client_company_site" placeholder="Наименование компании" />
@@ -1228,7 +1227,7 @@
 
         // ===== ОТПРАВКА ФОРМЫ В ELMA365 =====
         const ELMA_URL = 'https://efim365-crm.ru';
-        const API_KEY = 'e93480a2-166a-44a2-befe-ecf5eca5ea91';
+        const API_KEY = 'e93480a2-166a-44a2-befe-ecf5eca5ea91'; // ⚠️ подставьте свой ключ локально, не коммитьте в GitHub
         const NAMESPACE = '_clients';
         const APP_CODE = '_opportunities';
 
@@ -1245,11 +1244,16 @@
                     __name: form.client_name_site.value,
                     client_name_site: form.client_name_site.value,
                     client_company_site: form.client_company_site.value,
-                    client_phone_site: form.client_phone_site.value,
+                    client_phone_site: {
+                        value: form.client_phone_site.value,
+                        countryCode: 'RU'
+                    },
                     client_mail_site: form.client_mail_site.value,
                     client_project_site: form.client_project_site.value,
                 }
             };
+
+            console.log('Отправка в ELMA365:', JSON.stringify(leadData, null, 2));
 
             button.textContent = 'Отправка...';
             button.disabled = true;
