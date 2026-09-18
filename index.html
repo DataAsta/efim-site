@@ -1234,17 +1234,6 @@
         const NAMESPACE = '_clients';
         const APP_CODE = '_opportunities';
 
-        // Разные форматы для поля телефона — скрипт попробует по очереди
-        const phoneFormats = [
-            (v) => v.replace('+', ''),
-            (v) => ({ value: v }),
-            (v) => ({ value: v, countryCode: 7 }),
-            (v) => ({ phone: v }),
-            (v) => [{ value: v, countryCode: 'RU' }],
-            (v) => ({ number: v }),
-            (v) => ({ displayValue: v, value: v.replace('+', '') }),
-        ];
-
         document.getElementById('contactForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -1252,61 +1241,51 @@
             const button = form.querySelector('button[type="submit"]');
             const originalText = button.textContent;
 
-            const phoneValue = form.client_phone_site.value;
-            const baseData = {
-                __name: form.client_name_site.value,
-                client_name_site: form.client_name_site.value,
-                client_company_site: form.client_company_site.value,
-                client_mail_site: form.client_mail_site.value,
-                client_project_site: form.client_project_site.value,
+            // Формируем данные для ELMA365
+            const leadData = {
+                context: {
+                    __name: form.client_name_site.value,
+                    client_name_site: form.client_name_site.value,
+                    client_company_site: form.client_company_site.value,
+                    client_phone_site2: form.client_phone_site.value,
+                    client_mail_site: form.client_mail_site.value,
+                    client_project_site: form.client_project_site.value,
+                }
             };
+
+            console.log('Отправка в ELMA365:', JSON.stringify(leadData, null, 2));
 
             button.textContent = 'Отправка...';
             button.disabled = true;
 
-            for (let i = 0; i < phoneFormats.length; i++) {
-                const phoneData = phoneFormats[i](phoneValue);
-                const leadData = {
-                    context: {
-                        ...baseData,
-                        client_phone_site: phoneData,
+            try {
+                const response = await fetch(
+                    ELMA_URL + '/pub/v1/app/' + NAMESPACE + '/' + APP_CODE + '/create',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + API_KEY,
+                        },
+                        body: JSON.stringify(leadData),
                     }
-                };
+                );
 
-                console.log(`Попытка ${i + 1}:`, JSON.stringify(leadData, null, 2));
-
-                try {
-                    const response = await fetch(
-                        ELMA_URL + '/pub/v1/app/' + NAMESPACE + '/' + APP_CODE + '/create',
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + API_KEY,
-                            },
-                            body: JSON.stringify(leadData),
-                        }
-                    );
-
-                    if (response.ok) {
-                        console.log(`✅ Работает формат №${i + 1}:`, phoneData);
-                        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.');
-                        form.reset();
-                        button.textContent = originalText;
-                        button.disabled = false;
-                        return;
-                    } else {
-                        const errorText = await response.text();
-                        console.warn(`❌ Формат №${i + 1} не подошёл:`, response.status, errorText);
-                    }
-                } catch (error) {
-                    console.error(`❌ Ошибка сети в формате №${i + 1}:`, error);
+                if (response.ok) {
+                    alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.');
+                    form.reset();
+                } else {
+                    const errorText = await response.text();
+                    console.error('ELMA365 error:', response.status, errorText);
+                    alert('Ошибка при отправке заявки (' + response.status + '). Попробуйте позже или напишите нам напрямую.');
                 }
+            } catch (error) {
+                console.error('Network error:', error);
+                alert('Ошибка сети. Проверьте подключение и попробуйте снова.');
+            } finally {
+                button.textContent = originalText;
+                button.disabled = false;
             }
-
-            alert('Не удалось отправить заявку. Пожалуйста, напишите нам напрямую на почту.');
-            button.textContent = originalText;
-            button.disabled = false;
         });
     </script>
 
