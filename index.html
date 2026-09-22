@@ -143,8 +143,10 @@
         }
 
         .btn-primary:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .email-header {
@@ -733,6 +735,7 @@
             color: white;
             outline: 1px solid rgba(255, 255, 255, 0.1);
             transition: 0.2s;
+            width: 100%;
         }
 
         .contact-form input::placeholder,
@@ -764,6 +767,58 @@
             background: #c98644;
         }
 
+        /* ----- ВАЛИДАЦИЯ ПОЛЕЙ ----- */
+        .contact-form input.invalid,
+        .contact-form textarea.invalid {
+            outline: 2px solid #ff4d4f;
+            background: rgba(255, 77, 79, 0.08);
+        }
+
+        .field-error {
+            display: none;
+            font-size: 0.8rem;
+            color: #ff8082;
+            margin-top: 6px;
+            padding-left: 4px;
+        }
+
+        .field-error.visible {
+            display: block;
+        }
+
+        /* ----- ЧЕК-БОКС СОГЛАСИЯ ----- */
+        .consent-block {
+            margin-top: 4px;
+        }
+
+        .consent-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        .consent-label input[type="checkbox"] {
+            margin-top: 3px;
+            width: 16px;
+            height: 16px;
+            accent-color: #b87333;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .consent-label a {
+            color: rgba(255, 255, 255, 0.95);
+            text-decoration: underline;
+        }
+
+        .consent-label a:hover {
+            color: #b87333;
+        }
+
         /* ----- ФУТЕР ----- */
         footer {
             padding: 28px 0;
@@ -782,12 +837,12 @@
         }
 
         .footer-inner a {
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.5);
             text-decoration: none;
         }
 
         .footer-inner a:hover {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.9);
         }
 
         /* ----- АДАПТИВ ----- */
@@ -1175,13 +1230,42 @@
                     </p>
                 </div>
 
-                <form class="contact-form" id="contactForm">
-                    <input type="text" name="client_name_site" placeholder="Ваше имя и фамилия" required />
-                    <input type="text" name="client_company_site" placeholder="Наименование компании" />
-                    <input type="tel" name="client_phone_site" placeholder="Телефон для связи" required />
-                    <input type="email" name="client_mail_site" placeholder="E-mail для связи" required />
-                    <textarea name="client_project_site" placeholder="Опишите задачу или проект..." rows="4"></textarea>
-                    <button type="submit" class="btn-primary">Отправить заявку</button>
+                <form class="contact-form" id="contactForm" novalidate>
+                    <div>
+                        <input type="text" name="client_name_site" placeholder="Ваше имя и фамилия" required />
+                        <div class="field-error" data-for="client_name_site">Пожалуйста, укажите имя</div>
+                    </div>
+
+                    <div>
+                        <input type="text" name="client_company_site" placeholder="Наименование компании" />
+                    </div>
+
+                    <div>
+                        <input type="tel" name="client_phone_site" placeholder="Телефон для связи" required />
+                        <div class="field-error" data-for="client_phone_site">Введите корректный номер телефона</div>
+                    </div>
+
+                    <div>
+                        <input type="email" name="client_mail_site" placeholder="E-mail для связи" required />
+                        <div class="field-error" data-for="client_mail_site">Введите корректный e-mail (например, name@mail.ru)</div>
+                    </div>
+
+                    <div>
+                        <textarea name="client_project_site" placeholder="Опишите задачу или проект..." rows="4"></textarea>
+                    </div>
+
+                    <div class="consent-block">
+                        <label class="consent-label">
+                            <input type="checkbox" name="agree" id="agreeCheckbox" required />
+                            <span>
+                                Я даю согласие на обработку моих персональных данных в соответствии с
+                                <a href="privacy.html" target="_blank">Политикой конфиденциальности</a>
+                            </span>
+                        </label>
+                        <div class="field-error" data-for="agree">Необходимо согласие на обработку данных</div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitBtn" disabled>Отправить заявку</button>
                 </form>
             </div>
         </div>
@@ -1191,7 +1275,7 @@
     <footer>
         <div class="container footer-inner">
             <span>© ИП Загребин Е.И.</span>
-            <a href="#">Политика конфиденциальности</a>
+            <a href="privacy.html">Политика конфиденциальности</a>
         </div>
     </footer>
 
@@ -1225,36 +1309,150 @@
             showingFirst = !showingFirst;
         }, 3000);
 
+        // ===== ВАЛИДАЦИЯ И ОТПРАВКА ФОРМЫ =====
+        const form = document.getElementById('contactForm');
+        const emailInput = form.client_mail_site;
+        const phoneInput = form.client_phone_site;
+        const nameInput = form.client_name_site;
+        const agreeCheckbox = document.getElementById('agreeCheckbox');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Регулярные выражения
+        const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+        const phoneAllowedChars = /^[\+\d\s\-\(\)]+$/;
+
+        function showError(input, message) {
+            input.classList.add('invalid');
+            const errorEl = form.querySelector(`.field-error[data-for="${input.name}"]`);
+            if (errorEl) {
+                if (message) errorEl.textContent = message;
+                errorEl.classList.add('visible');
+            }
+        }
+
+        function clearError(input) {
+            input.classList.remove('invalid');
+            const errorEl = form.querySelector(`.field-error[data-for="${input.name}"]`);
+            if (errorEl) errorEl.classList.remove('visible');
+        }
+
+        function validateEmail() {
+            const value = emailInput.value.trim();
+            if (!value) {
+                showError(emailInput, 'Укажите e-mail для связи');
+                return false;
+            }
+            if (!emailRegex.test(value)) {
+                showError(emailInput, 'Введите корректный e-mail (например, name@mail.ru)');
+                return false;
+            }
+            clearError(emailInput);
+            return true;
+        }
+
+        function validatePhone() {
+            const value = phoneInput.value.trim();
+            const digitsOnly = value.replace(/\D/g, '');
+            if (!value) {
+                showError(phoneInput, 'Укажите телефон для связи');
+                return false;
+            }
+            if (!phoneAllowedChars.test(value)) {
+                showError(phoneInput, 'Телефон может содержать только цифры, +, пробелы, скобки и дефисы');
+                return false;
+            }
+            if (digitsOnly.length < 10) {
+                showError(phoneInput, 'В номере должно быть минимум 10 цифр');
+                return false;
+            }
+            if (digitsOnly.length > 15) {
+                showError(phoneInput, 'В номере не должно быть больше 15 цифр');
+                return false;
+            }
+            clearError(phoneInput);
+            return true;
+        }
+
+        function validateName() {
+            const value = nameInput.value.trim();
+            if (value.length < 2) {
+                showError(nameInput, 'Пожалуйста, укажите имя');
+                return false;
+            }
+            clearError(nameInput);
+            return true;
+        }
+
+        function validateConsent() {
+            const errorEl = form.querySelector('.field-error[data-for="agree"]');
+            if (!agreeCheckbox.checked) {
+                if (errorEl) errorEl.classList.add('visible');
+                return false;
+            }
+            if (errorEl) errorEl.classList.remove('visible');
+            return true;
+        }
+
+        // Активация кнопки при установке галочки
+        agreeCheckbox.addEventListener('change', function() {
+            submitBtn.disabled = !this.checked;
+            validateConsent();
+        });
+
+        // Проверка при вводе
+        emailInput.addEventListener('input', () => {
+            if (emailInput.classList.contains('invalid')) validateEmail();
+        });
+        phoneInput.addEventListener('input', () => {
+            if (phoneInput.classList.contains('invalid')) validatePhone();
+        });
+        nameInput.addEventListener('input', () => {
+            if (nameInput.classList.contains('invalid')) validateName();
+        });
+
+        // Проверка при потере фокуса
+        emailInput.addEventListener('blur', validateEmail);
+        phoneInput.addEventListener('blur', validatePhone);
+        nameInput.addEventListener('blur', validateName);
+
         // ===== ОТПРАВКА ФОРМЫ В ELMA365 =====
         const ELMA_URL = 'https://efim365-crm.ru';
 
         // ⚠️ ВСТАВЬТЕ СВОЙ API-КЛЮЧ СЮДА:
-        const API_KEY = '0bae9b67-a4f4-4f63-b8e7-b9bc8b848d4c';
+        const API_KEY = '0bae9b67-a4f4-4f63-b8e7-b9bc8b848d4c'; 
 
         const NAMESPACE = '_clients';
         const APP_CODE = '_opportunities';
 
-        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const form = e.target;
+            const isNameValid = validateName();
+            const isPhoneValid = validatePhone();
+            const isEmailValid = validateEmail();
+            const isConsentValid = validateConsent();
+
+            if (!isNameValid || !isPhoneValid || !isEmailValid || !isConsentValid) {
+                const firstInvalid = form.querySelector('.invalid') || agreeCheckbox;
+                if (firstInvalid) firstInvalid.focus();
+                return;
+            }
+
             const button = form.querySelector('button[type="submit"]');
             const originalText = button.textContent;
 
-            // Формируем данные для ELMA365
             const leadData = {
                 context: {
                     __name: form.client_name_site.value,
                     client_name_site: form.client_name_site.value,
                     client_company_site: form.client_company_site.value,
-                    client_phone_site: [ { "type": "mobile", "phone": form.client_phone_site.value } ],
-                    // client_phone_site2: form.client_phone_site.value,
-                   // client_mail_site: form.client_mail_site.value,
+                    client_phone_site2: form.client_phone_site.value,
+                    //client_phone_site: [ { "type": "mobile", "phone": form.client_phone_site.value } ],
                     client_mail_site: [ { "type": "work", "email": form.client_mail_site.value } ],
                     client_project_site: form.client_project_site.value,
                 }
-            };
-
+            };                   
+                       
             console.log('Отправка в ELMA365:', JSON.stringify(leadData, null, 2));
 
             button.textContent = 'Отправка...';
@@ -1276,6 +1474,7 @@
                 if (response.ok) {
                     alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.');
                     form.reset();
+                    submitBtn.disabled = true; // снова блокируем после сброса
                 } else {
                     const errorText = await response.text();
                     console.error('ELMA365 error:', response.status, errorText);
