@@ -605,42 +605,29 @@
             color: #b87333;
         }
 
-        .details-block {
-            margin-top: 12px;
+        /* ----- ОПЫТ РАБОТЫ (всегда видимый блок) ----- */
+        .experience-block {
+            margin-top: 20px;
             border: 1px solid #eef2f6;
             border-radius: 12px;
-            padding: 8px 16px 16px 16px;
+            padding: 16px 20px 20px 20px;
             background: #fafcff;
         }
-        .details-block summary {
-            font-weight: 600;
+
+        .experience-block .experience-title {
+            font-weight: 700;
             color: #0b2c47;
-            cursor: pointer;
-            padding: 8px 0;
-            list-style: none;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 1rem;
-        }
-        .details-block summary::-webkit-details-marker {
-            display: none;
-        }
-        .details-block summary::before {
-            content: "▶";
-            font-size: 0.8rem;
-            color: #b87333;
-            transition: transform 0.2s;
-        }
-        .details-block[open] summary::before {
-            transform: rotate(90deg);
         }
 
         .experience-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
-            margin-top: 8px;
         }
         .experience-table th,
         .experience-table td {
@@ -936,6 +923,13 @@
             .case-content h3 {
                 font-size: 1.3rem;
             }
+            .experience-table {
+                font-size: 0.8rem;
+            }
+            .experience-table th,
+            .experience-table td {
+                padding: 6px 8px;
+            }
         }
 
         @media (max-width: 420px) {
@@ -1187,8 +1181,9 @@
                     <strong>Мой подход:</strong> без бюрократии, зато с глубокой экспертизой и личной ответственностью за проект.
                 </p>
 
-                <details class="details-block">
-                    <summary>💻 Опыт работы</summary>
+                <!-- Опыт работы (всегда видимый) -->
+                <div class="experience-block">
+                    <div class="experience-title">💻 Опыт работы</div>
                     <table class="experience-table">
                         <thead>
                             <tr>
@@ -1199,13 +1194,13 @@
                         </thead>
                         <tbody>
                             <tr><td>с ноября 2024</td><td>EFIM365</td><td>Самозанятость</td></tr>
-                            <tr><td>февраль 2024 — ноябрь 2024</td><td>МТС Digital</td><td>Team Lead (ELMA365)</td></tr>
-                            <tr><td>июнь 2023 — февраль 2024</td><td>Codexoptimus</td><td>Senior low-code developer (ELMA365)</td></tr>
-                            <tr><td>январь 2021 — июнь 2023</td><td>Elma</td><td>Team Lead (ELMA365)</td></tr>
-                            <tr><td>декабрь 2019 — январь 2021</td><td>Elma</td><td>Low-code developer (ELMA365)</td></tr>
+                            <tr><td>2024</td><td>МТС Digital</td><td>Team Lead (ELMA365)</td></tr>
+                            <tr><td>2023 — 2024</td><td>Codexoptimus</td><td>Senior low-code developer (ELMA365)</td></tr>
+                            <tr><td>2021 — 2023</td><td>Elma</td><td>Team Lead (ELMA365)</td></tr>
+                            <tr><td>2019 — 2021</td><td>Elma</td><td>Low-code developer (ELMA365)</td></tr>
                         </tbody>
                     </table>
-                </details>
+                </div>
             </div>
         </div>
     </section>
@@ -1367,7 +1362,6 @@
                 return false;
             }
 
-            // Российские номера: 10 цифр (без кода страны) или 11 (с 7/8 в начале)
             const startsWithRuCode = /^[\+]?[78]/.test(value);
             const isRussian = startsWithRuCode || digitsOnly.length === 10;
             const isInternational = /^\+/.test(value) && !startsWithRuCode && digitsOnly.length >= 11 && digitsOnly.length <= 15;
