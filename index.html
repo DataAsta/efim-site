@@ -346,29 +346,20 @@
             background: white;
             border-top: 1px solid #eef2f6;
             border-bottom: 1px solid #eef2f6;
-            overflow: hidden;
         }
 
-        .clients-wrapper {
-            margin-top: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .clients-track {
-            display: flex;
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 30px;
-            animation: scrollClients 35s linear infinite;
-            width: max-content;
-        }
-
-        .clients-track:hover {
-            animation-play-state: paused;
+            margin-top: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .client-item {
-            flex: 0 0 auto;
-            width: 210px;
+            width: 100%;
             height: 175px;
             display: flex;
             align-items: center;
@@ -401,13 +392,6 @@
             background: #06101e;
         }
 
-        .client-item.bg-auxo {
-            background: #000000;
-        }
-        .client-item.bg-auxo:hover {
-            background: #1a1a1a;
-        }
-
         .client-item.bg-rogos {
             background: #000000;
         }
@@ -421,11 +405,6 @@
             object-fit: contain;
             display: block;
             border-radius: 16px;
-        }
-
-        @keyframes scrollClients {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
         }
 
         /* ----- КЕЙС ПАРТНЁРА ----- */
@@ -605,7 +584,7 @@
             color: #b87333;
         }
 
-        /* ----- ОПЫТ РАБОТЫ (всегда видимый блок) ----- */
+        /* ----- ОПЫТ РАБОТЫ ----- */
         .experience-block {
             margin-top: 20px;
             border: 1px solid #eef2f6;
@@ -853,10 +832,6 @@
                 grid-template-columns: repeat(3, 1fr);
                 gap: 15px;
             }
-            .client-item {
-                width: 170px;
-                height: 145px;
-            }
             .case-card {
                 grid-template-columns: 1fr;
                 gap: 24px;
@@ -907,12 +882,12 @@
             .logo img {
                 height: 50px;
             }
-            .clients-track {
+            .clients-grid {
+                grid-template-columns: repeat(2, 1fr);
                 gap: 16px;
             }
             .client-item {
-                width: 130px;
-                height: 110px;
+                height: 120px;
             }
             .advantages-grid {
                 grid-template-columns: 1fr 1fr;
@@ -944,10 +919,6 @@
             }
             .advantages-grid {
                 grid-template-columns: 1fr;
-            }
-            .client-item {
-                width: 110px;
-                height: 90px;
             }
         }
 
@@ -1067,34 +1038,16 @@
         </div>
     </section>
 
-    <!-- ===== КЛИЕНТЫ ===== -->
+    <!-- ===== КЛИЕНТЫ (только 4 компании) ===== -->
     <section class="clients" id="clients">
         <div class="container">
             <h2 class="section-title">Компании<span class="comma">,</span></h2>
             <p class="section-sub">которые доверили нам свою автоматизацию</p>
-            <div class="clients-wrapper">
-                <div class="clients-track">
-                    <div class="client-item bg-f6"><img src="f6.png" alt="F6" /></div>
-                    <div class="client-item white-bg"><img src="МИТТУ.jpeg" alt="КАМАЗ (МИТТУ)" /></div>
-                    <div class="client-item white-bg"><img src="Камаз.jpg" alt="КАМАЗ" /></div>
-                    <div class="client-item bg-auxo"><img src="Auxo.jpg" alt="AUXO" /></div>
-                    <div class="client-item white-bg"><img src="dostavista.png" alt="Достависта" /></div>
-                    <div class="client-item white-bg"><img src="ПИС.jpg" alt="НПО ПИС" /></div>
-                    <div class="client-item white-bg"><img src="трайдент.png" alt="Трайдент ИСТ" /></div>
-                    <div class="client-item bg-rogos"><img src="Рогос.jpg" alt="Рогос" /></div>
-                    <div class="client-item white-bg"><img src="Красцветмет.jpg" alt="КрасЦветмед" /></div>
-                    <div class="client-item white-bg"><img src="РМК.png" alt="РМК" /></div>
-                    <div class="client-item bg-f6"><img src="f6.png" alt="F6" /></div>
-                    <div class="client-item white-bg"><img src="МИТТУ.jpeg" alt="КАМАЗ (МИТТУ)" /></div>
-                    <div class="client-item white-bg"><img src="Камаз.jpg" alt="КАМАЗ" /></div>
-                    <div class="client-item bg-auxo"><img src="Auxo.jpg" alt="AUXO" /></div>
-                    <div class="client-item white-bg"><img src="dostavista.png" alt="Достависта" /></div>
-                    <div class="client-item white-bg"><img src="ПИС.jpg" alt="НПО ПИС" /></div>
-                    <div class="client-item white-bg"><img src="трайдент.png" alt="Трайдент ИСТ" /></div>
-                    <div class="client-item bg-rogos"><img src="Рогос.jpg" alt="Рогос" /></div>
-                    <div class="client-item white-bg"><img src="Красцветмет.jpg" alt="КрасЦветмед" /></div>
-                    <div class="client-item white-bg"><img src="РМК.png" alt="РМК" /></div>
-                </div>
+            <div class="clients-grid">
+                <div class="client-item bg-f6"><img src="f6.png" alt="F6" /></div>
+                <div class="client-item white-bg"><img src="МИТТУ.jpeg" alt="КАМАЗ (МИТТУ)" /></div>
+                <div class="client-item white-bg"><img src="трайдент.png" alt="Трайдент ИСТ" /></div>
+                <div class="client-item bg-rogos"><img src="Рогос.jpg" alt="Рогос" /></div>
             </div>
         </div>
     </section>
@@ -1181,7 +1134,7 @@
                     <strong>Мой подход:</strong> без бюрократии, зато с глубокой экспертизой и личной ответственностью за проект.
                 </p>
 
-                <!-- Опыт работы (всегда видимый) -->
+                <!-- Опыт работы -->
                 <div class="experience-block">
                     <div class="experience-title">💻 Опыт работы</div>
                     <table class="experience-table">
@@ -1504,7 +1457,7 @@
                 if (response.ok) {
                     alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.');
                     form.reset();
-                    submitBtn.disabled = true; // снова блокируем после сброса
+                    submitBtn.disabled = true;
                 } else {
                     const errorText = await response.text();
                     console.error('ELMA365 error:', response.status, errorText);
