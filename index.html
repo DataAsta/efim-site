@@ -1251,7 +1251,8 @@
                     </div>
 
                     <div>
-                        <textarea name="client_project_site" placeholder="Опишите задачу или проект..." rows="4"></textarea>
+                        <textarea name="client_project_site" placeholder="Опишите задачу или проект..." rows="4" required></textarea>
+                        <div class="field-error" data-for="client_project_site">Пожалуйста, опишите задачу или проект (минимум 5 символов)</div>
                     </div>
 
                     <div class="consent-block">
@@ -1314,6 +1315,7 @@
         const emailInput = form.client_mail_site;
         const phoneInput = form.client_phone_site;
         const nameInput = form.client_name_site;
+        const projectInput = form.client_project_site;
         const agreeCheckbox = document.getElementById('agreeCheckbox');
         const submitBtn = document.getElementById('submitBtn');
 
@@ -1353,22 +1355,41 @@
         function validatePhone() {
             const value = phoneInput.value.trim();
             const digitsOnly = value.replace(/\D/g, '');
+
             if (!value) {
                 showError(phoneInput, 'Укажите телефон для связи');
                 return false;
             }
+
             if (!phoneAllowedChars.test(value)) {
                 showError(phoneInput, 'Телефон может содержать только цифры, +, пробелы, скобки и дефисы');
                 return false;
             }
-            if (digitsOnly.length < 10) {
-                showError(phoneInput, 'В номере должно быть минимум 10 цифр');
+
+            // Российские номера: 10 цифр (без кода страны) или 11 (с 7/8 в начале)
+            const startsWithRuCode = /^[\+]?[78]/.test(value);
+            const isRussian = startsWithRuCode || digitsOnly.length === 10;
+            const isInternational = /^\+/.test(value) && !startsWithRuCode && digitsOnly.length >= 11 && digitsOnly.length <= 15;
+
+            if (isRussian) {
+                if (digitsOnly.length !== 10 && digitsOnly.length !== 11) {
+                    showError(phoneInput, 'Российский номер должен содержать 10 или 11 цифр (например, +7 912 345-67-89)');
+                    return false;
+                }
+                if (digitsOnly.length === 11 && !/^[78]/.test(digitsOnly)) {
+                    showError(phoneInput, 'Номер с кодом страны должен начинаться с +7 или 8');
+                    return false;
+                }
+            } else if (isInternational) {
+                if (digitsOnly.length < 11 || digitsOnly.length > 15) {
+                    showError(phoneInput, 'Международный номер должен содержать от 11 до 15 цифр');
+                    return false;
+                }
+            } else {
+                showError(phoneInput, 'Введите корректный номер телефона (например, +7 912 345-67-89)');
                 return false;
             }
-            if (digitsOnly.length > 15) {
-                showError(phoneInput, 'В номере не должно быть больше 15 цифр');
-                return false;
-            }
+
             clearError(phoneInput);
             return true;
         }
@@ -1380,6 +1401,16 @@
                 return false;
             }
             clearError(nameInput);
+            return true;
+        }
+
+        function validateProject() {
+            const value = projectInput.value.trim();
+            if (value.length < 5) {
+                showError(projectInput, 'Пожалуйста, опишите задачу или проект (минимум 5 символов)');
+                return false;
+            }
+            clearError(projectInput);
             return true;
         }
 
@@ -1409,11 +1440,15 @@
         nameInput.addEventListener('input', () => {
             if (nameInput.classList.contains('invalid')) validateName();
         });
+        projectInput.addEventListener('input', () => {
+            if (projectInput.classList.contains('invalid')) validateProject();
+        });
 
         // Проверка при потере фокуса
         emailInput.addEventListener('blur', validateEmail);
         phoneInput.addEventListener('blur', validatePhone);
         nameInput.addEventListener('blur', validateName);
+        projectInput.addEventListener('blur', validateProject);
 
         // ===== ОТПРАВКА ФОРМЫ В ELMA365 =====
         const ELMA_URL = 'https://efim365-crm.ru';
@@ -1430,9 +1465,10 @@
             const isNameValid = validateName();
             const isPhoneValid = validatePhone();
             const isEmailValid = validateEmail();
+            const isProjectValid = validateProject();
             const isConsentValid = validateConsent();
 
-            if (!isNameValid || !isPhoneValid || !isEmailValid || !isConsentValid) {
+            if (!isNameValid || !isPhoneValid || !isEmailValid || !isProjectValid || !isConsentValid) {
                 const firstInvalid = form.querySelector('.invalid') || agreeCheckbox;
                 if (firstInvalid) firstInvalid.focus();
                 return;
@@ -1447,12 +1483,11 @@
                     client_name_site: form.client_name_site.value,
                     client_company_site: form.client_company_site.value,
                     client_phone_site2: form.client_phone_site.value,
-                    //client_phone_site: [ { "type": "mobile", "phone": form.client_phone_site.value } ],
                     client_mail_site: [ { "type": "work", "email": form.client_mail_site.value } ],
                     client_project_site: form.client_project_site.value,
                 }
-            };                   
-                       
+            };
+
             console.log('Отправка в ELMA365:', JSON.stringify(leadData, null, 2));
 
             button.textContent = 'Отправка...';
